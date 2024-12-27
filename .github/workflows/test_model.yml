@@ -1,0 +1,33 @@
+name: Test Model Accuracy
+
+on:
+  push:
+    paths:
+      - 'models/**'
+      - 'best_model.pth'
+  pull_request:
+    paths:
+      - 'models/**'
+      - 'best_model.pth'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install torch torchvision pyyaml pytest
+        pip install -r requirements.txt
+    
+    - name: Run accuracy test
+      run: |
+        pytest tests/test_accuracy.py -v 
